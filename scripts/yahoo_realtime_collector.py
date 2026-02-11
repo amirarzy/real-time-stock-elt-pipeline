@@ -2,22 +2,27 @@ import time
 import os
 from datetime import datetime, timedelta, timezone
 
+from dotenv import load_dotenv
+
 import pytz
 import yfinance as yf
 import pandas_market_calendars as mcal
 import psycopg2
 
+# Load environment variables from .env (project root)
+load_dotenv()
+
 # ---------------- CONFIG ----------------
 DB_CONFIG = {
-    "host": "localhost",
-    "port": 5432,
-    "dbname": "market_data",
-    "user": "amir",
-    "password": "@A82473054n",
+    "host": os.getenv("DB_HOST", "localhost"),
+    "port": int(os.getenv("DB_PORT", "5432")),
+    "dbname": os.getenv("DB_NAME", "market_data"),
+    "user": os.getenv("DB_USER", "amir"),
+    "password": os.getenv("DB_PASSWORD", ""),
 }
 
-LOG_PATH = "/opt/market_data/logs/collector.log"
-SYMBOLS = ["AAPL", "MSFT", "TSLA", "NVDA"]
+LOG_PATH = os.getenv("LOG_PATH", "/opt/market_data/logs/collector.log")
+SYMBOLS = [s.strip() for s in os.getenv("SYMBOLS", "AAPL,MSFT,TSLA,NVDA").split(",") if s.strip()]
 
 NY_TZ = pytz.timezone("America/New_York")
 UTC = timezone.utc
@@ -39,6 +44,8 @@ def log(msg: str):
 
 
 def get_db():
+    if not DB_CONFIG.get("password"):
+        raise RuntimeError("DB_PASSWORD is empty. Set it in .env")
     return psycopg2.connect(**DB_CONFIG)
 
 
@@ -135,15 +142,21 @@ def fetch_and_store(conn):
         df = data[sym].dropna()
         for ts, r in df.iterrows():
             dt = ts.to_pydatetime().astimezone(UTC)
-            rows.append((
-                sym,
-                dt,
-                float(r["Open"]),
-                float(r["High"]),
-                float(r["Low"]),
-                float(r["Close"]),
-                int(r["Volume"]),
-            ))
+            rows.append(
+                (
+                    sym,
+                    dt,
+                    float(r["Open"]),
+                    float(r["High"]),
+                    float(r["Low"]),
+                    float(r["Close"]),
+                    int(r["Volume"]),
+                )
+            )
+
+    if not rows:
+        log("No rows fetched (possibly market closed or API lag).")
+        return
 
     insert_q = """
     INSERT INTO market_data
@@ -168,6 +181,7 @@ def main():
     log("Collector started")
 
     while True:
+        conn = None
         try:
             conn = get_db()
             ensure_table(conn)
@@ -193,7 +207,8 @@ def main():
 
         except Exception as e:
             try:
-                conn.close()
+                if conn:
+                    conn.close()
             except Exception:
                 pass
             log(f"ERROR: {e}")

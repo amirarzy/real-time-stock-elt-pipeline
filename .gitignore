@@ -1,7 +1,20 @@
-.venv/
+cd /opt/market_data
+
+cat > .gitignore <<'EOF'
+# Secrets
+airflow.env
+.env
+
+# Airflow local state
+airflow_home/
+logs/
+
+# Python
 __pycache__/
 *.pyc
-logs/
+.venv/
+
+# Data/backups
+backup_*.sql
 data/
-*.log
-.env
+EOF
