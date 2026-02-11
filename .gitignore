@@ -19,3 +19,7 @@ backup_*.sql
 data/
 EOF
 scripts/
+
+# Local analysis artifacts
+=
+*.png
