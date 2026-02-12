@@ -1,0 +1,7 @@
+version: 2
+
+sources:
+  - name: market_data_raw
+    schema: public
+    tables:
+      - name: market_data

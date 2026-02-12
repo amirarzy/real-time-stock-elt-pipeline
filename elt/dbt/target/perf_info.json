@@ -1,0 +1,51 @@
+{
+    "path_count": 134,
+    "parsed_path_count": 134,
+    "static_analysis_path_count": 1,
+    "static_analysis_parsed_path_count": 1,
+    "is_partial_parse_enabled": true,
+    "is_static_analysis_enabled": true,
+    "read_files_elapsed": 0.014438623999012634,
+    "load_macros_elapsed": 0.7616811429998052,
+    "parse_project_elapsed": 0.39079237199985073,
+    "patch_sources_elapsed": 0.02303727899925434,
+    "process_manifest_elapsed": 0.02908164099972055,
+    "load_all_elapsed": 1.4204033690002689,
+    "projects": [
+        {
+            "project_name": "market_data",
+            "elapsed": 0.3796844750013406,
+            "parsers": [
+                {
+                    "parser": "model",
+                    "elapsed": 0.207051004999812,
+                    "parsed_path_count": 1
+                },
+                {
+                    "parser": "test",
+                    "elapsed": 0.16756877099942358,
+                    "parsed_path_count": 2
+                }
+            ],
+            "parsed_path_count": 3
+        },
+        {
+            "project_name": "dbt_postgres",
+            "elapsed": 0.005674419000570197,
+            "parsers": [],
+            "parsed_path_count": 0
+        },
+        {
+            "project_name": "dbt",
+            "elapsed": 0.005291311001201393,
+            "parsers": [
+                {
+                    "parser": "doc",
+                    "elapsed": 0.00029787600033159833,
+                    "parsed_path_count": 1
+                }
+            ],
+            "parsed_path_count": 1
+        }
+    ]
+}

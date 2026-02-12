@@ -8,6 +8,8 @@ airflow.env
 # Airflow local state
 airflow_home/
 logs/
+/elt/dbt/logs/
+
 
 # Python
 __pycache__/
