@@ -1,27 +1,52 @@
-cd /opt/market_data
-
-cat > .gitignore <<'EOF'
-# Secrets
-airflow.env
+# Environment and secrets
 .env
-
-# Airflow local state
-airflow_home/
-logs/
-/elt/dbt/logs/
-
+*.env
+airflow.env
+.env.*
+!.env.example
 
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
 .venv/
+venv/
+.ipynb_checkpoints/
 
-# Data/backups
-backup_*.sql
+# Airflow local files
+airflow_home/
+airflow.db
+logs/
+*.pid
+
+# dbt generated artifacts
+elt/dbt/target/
+elt/dbt/dbt_packages/
+elt/dbt/logs/
+elt/dbt/.user.yml
+
+# Data and outputs
 data/
-EOF
-scripts/
-
-# Local analysis artifacts
-=
+*.csv
+*.parquet
+*.feather
+*.xlsx
 *.png
+*.jpg
+*.jpeg
+*.pdf
+
+# Backups
+*.bak
+*.bak_*
+backup_*.sql
+*_backup.*
+*.sql.bak
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Misc
+=
